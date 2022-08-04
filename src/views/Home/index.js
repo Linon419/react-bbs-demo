@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getPosts } from "../../api";
 import "./index.scss";
 import ContentContainer from './ContentContainer.js'
+import HomeTop from "../HomeTop";
 
 
 
@@ -12,11 +13,11 @@ const Home = () => {
   const { path } = useParams();
 
   const classifyData = [
-    { name: "全部", categoryId: 0, path: "/total" },
-    { name: "分享", categoryId: 1, path: "/share" },
-    { name: "讨论", categoryId: 2, path: "/discuss" },
-    { name: "吐槽", categoryId: 3, path: "/complain" },
-    { name: "夸夸", categoryId: 4, path: "/complement" },
+    { name: "All posts", categoryId: 0, path: "/total" },
+    { name: "Share", categoryId: 1, path: "/share" },
+    { name: "Discuss", categoryId: 2, path: "/discuss" },
+    { name: "Complain", categoryId: 3, path: "/complain" },
+    { name: "Others", categoryId: 4, path: "/complement" },
   ];
 
   const [currentInedx, setCurrentIndex] = useState(0);
@@ -59,6 +60,7 @@ const Home = () => {
 
   return (
     <div className="home-main">
+            <HomeTop />
       <div className="classify">{ItemList}</div>
       <div className="container">
          <ContentContainer posts={posts}></ContentContainer>

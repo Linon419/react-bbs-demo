@@ -16,7 +16,7 @@ const ContentItem = (props) => {
   useEffect(() => {
     getProfile(props.item.userId).then((res) => {
       let data = res.data;
-      // console.log(data)
+      // console.log("userinfo"+res)
       setUserInfo(data);
     });
   }, [props.item.userId]);
@@ -32,7 +32,7 @@ const ContentItem = (props) => {
     navigate(`/postDetail/${postId}`)
   };
 
-  const tagMap = { 1: "分享", 2: "讨论", 3: "吐槽", 4: "夸夸" };
+  const tagMap = { 1: "Share", 2: "Discussion", 3: "Complain", 4: "Others" };
 
   const tag = tagMap[props.item.category];
 

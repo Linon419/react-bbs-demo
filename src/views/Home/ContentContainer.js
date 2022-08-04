@@ -1,5 +1,5 @@
 import React from 'react';
-import ContentItem from "./ContentItem.js";
+import ContentItem from "./ContentItem";
 
 const ContentContainer = (props) => {
   // console.log(props.posts)

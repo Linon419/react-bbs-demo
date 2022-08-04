@@ -1,4 +1,5 @@
 import { request } from "../utils"
+
 //获取分类为3的所有的帖子
 export function getPosts(categoryId) {
   return request({
@@ -28,6 +29,16 @@ export function getComments(postId) {
 
 //增加回复
 export function addComment(postId, content) {
+  return request({
+    url: `/comments/${postId}`,
+    method: 'post',
+    data: {
+      content
+    }
+  })
+}
+
+export function deleteComment(postId,content) {
   return request({
     url: `/comments/${postId}`,
     method: 'post',

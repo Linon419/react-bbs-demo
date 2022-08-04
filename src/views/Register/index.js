@@ -1,200 +1,175 @@
-import {
-  AutoComplete,
-  Button,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  Row,
-  Select,
-} from 'antd';
-import React, { useState } from 'react';
-const { Option } = Select;
-const formItemLayout = {
+
+import React,{useState} from "react";
+import { useSelector } from "react-redux";
+import { useNavigate} from 'react-router-dom'
+import { Button, Form, Input,notification,Upload } from "antd";
+import { SmileOutlined ,FrownTwoTone,UploadOutlined} from '@ant-design/icons';
+import { CloseOutlined } from "@ant-design/icons";
+import { register } from "../../api";
+import './index.scss'
+
+
+const layout = {
   labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 8,
-    },
+    span: 6,
   },
   wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 16,
-    },
+    span: 14,
   },
 };
-const tailFormItemLayout = {
+const tailLayout = {
   wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 8,
-    },
+    offset: 8,
+    span: 16,
   },
 };
 
 const Register = () => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
+  const navigate = useNavigate()
+  const isLogined = useSelector(state => state.user.isLogined)
+
+
+  const [avator, setAvator] = useState({});
 
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+
+    if(!isLogined){
+      let name = form.getFieldValue().name
+      let password = form.getFieldValue().password
+      let email = form.getFieldValue().email
+      let formData = new FormData()
+      formData.append('name',name)
+      formData.append('password',password)
+      formData.append('email',email)
+      formData.append('avator',avator,avator.name)
+
+
+
+      register(formData).then(res => {
+        console.log(res)
+        if(res.data.code === 0){
+          notification.open({
+            message: 'Register successfully！',
+            description:
+              'You have successfully registered, please login:)',
+            icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+          });
+          navigate('/login')
+          form.resetFields();
+        }else {
+          notification.open({
+            message: 'Registration failed！',
+            description:
+              'An unknown error occurred, sorry',
+            icon: <FrownTwoTone style={{ color: '#ff4c4c' }} />,
+          });
+        }
+      })
+    }
+  }
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  }
+
+  const onReset = () => {
+    form.resetFields();
+  }
+
+  const normFile = e => {
+
+    if (Array.isArray(e)) {
+      return e;
+    }
+    // console.log(e)
+    setAvator(e.file)
+    return e && e.fileList;
   };
 
 
-  const [autoCompleteResult, setAutoCompleteResult] = useState([]);
+  //这样可以阻止头像默认上传
+  const handleBeforeUpload = (file,size) => {
+    return false
+  }
 
+  const close = () => {
+    navigate(-1)
+  }
 
 
   return (
-    <Form
-      {...formItemLayout}
-      form={form}
-      name="register"
+    <div className="register">
+      <div className="container">
+      <div className="header">Register</div>
+      <Button className="close" icon={<CloseOutlined />} onClick={close}></Button>
+      <Form
+      {...layout}
+      name="basic"
+      initialValues={
+        {remember: true}
+      }
       onFinish={onFinish}
-      initialValues={{
-        residence: ['zhejiang', 'hangzhou', 'xihu'],
-        prefix: '86',
-      }}
-      scrollToFirstError
-    >
-      <Form.Item
+      onFinishFailed={onFinishFailed}
+      form={form}
+      >
+        <Form.Item
+        label="Name"
+        name="name"
+        rules={[
+          {
+            required:true,
+            message: 'Please enter your name'
+          }
+        ]}
+        >
+          <Input></Input>
+
+        </Form.Item>
+        <Form.Item label="Password" name="password"
+                rules={[
+                  {
+                    required:true,
+                    message: 'Please enter your password'
+                  }
+                ]}
+        >
+          <Input.Password></Input.Password>
+        </Form.Item>
+        <Form.Item
+        label="Email"
         name="email"
-        label="E-mail"
         rules={[
           {
-            type: 'email',
-            message: 'The input is not valid E-mail!',
-          },
-          {
-            required: true,
-            message: 'Please input your E-mail!',
-          },
+            required:true,
+            message: 'Please enter your email address'
+          }
         ]}
-      >
-        <Input />
-      </Form.Item>
+        >
+          <Input></Input>
 
-      <Form.Item
-        name="password"
-        label="Password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        name="confirm"
-        label="Confirm Password"
-        dependencies={['password']}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: 'Please confirm your password!',
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-
-              return Promise.reject(new Error('The two passwords that you entered do not match!'));
-            },
-          }),
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        name="nickname"
-        label="Nickname"
-        tooltip="What do you want others to call you?"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your nickname!',
-            whitespace: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        name="gender"
-        label="Gender"
-        rules={[
-          {
-            required: true,
-            message: 'Please select gender!',
-          },
-        ]}
-      >
-        <Select placeholder="select your gender">
-          <Option value="male">Male</Option>
-          <Option value="female">Female</Option>
-          <Option value="other">Other</Option>
-        </Select>
-      </Form.Item>
-
-      <Form.Item label="Captcha" extra="We must make sure that your are a human.">
-        <Row gutter={8}>
-          <Col span={12}>
-            <Form.Item
-              name="captcha"
-              noStyle
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input the captcha you got!',
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Button>Get captcha</Button>
-          </Col>
-        </Row>
-      </Form.Item>
-
-      <Form.Item
-        name="agreement"
-        valuePropName="checked"
-        rules={[
-          {
-            validator: (_, value) =>
-              value ? Promise.resolve() : Promise.reject(new Error('Should accept agreement')),
-          },
-        ]}
-        {...tailFormItemLayout}
-      >
-        <Checkbox>
-          I have read the agreement
-        </Checkbox>
-      </Form.Item>
-      <Form.Item {...tailFormItemLayout}>
+        </Form.Item>
+        <Form.Item label="Upload avatar" name="avator"
+        valuePropName="fileList"
+        getValueFromEvent={normFile}
+        >
+        <Upload name="logo" listType="picture" beforeUpload={handleBeforeUpload}>
+          <Button icon={<UploadOutlined />}>Click to upload</Button>
+        </Upload>
+        </Form.Item>
+        <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
-          Register
+          Submit
+        </Button>
+        <Button htmlType="button" onClick={onReset} className="reset">
+          Reset
         </Button>
       </Form.Item>
-    </Form>
-  );
-};
-  export default Register
+
+      </Form>
+      </div>
+    </div>
+   );
+}
+
+export default Register;

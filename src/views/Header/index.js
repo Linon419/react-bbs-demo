@@ -1,8 +1,8 @@
-import React,{useEffect} from "react";
-import { useNavigate, Link  } from "react-router-dom";
-import { useSelector,useDispatch } from "react-redux";
-import {userIsLogined,signOut} from "../../api";
-import { notification } from "antd";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { userIsLogined, signOut } from "../../api";
+import { notification, Button } from "antd";
 import { SmileOutlined, FrownTwoTone } from "@ant-design/icons";
 import './index.scss'
 
@@ -12,12 +12,12 @@ const Header = () => {
   // const isLogined = false
   // const loginedUser = {name: 'xj',age:'21'}
 
-//页面挂载的时候，判断有没有cookie，然后设置页面的登录状态
+  //页面挂载的时候，判断有没有cookie，然后设置页面的登录状态
   useEffect(() => {
     userIsLogined().then(res => {
-      if(res.data.code === 0){
-        dispatch({type:'set-isLogined',payload:true})
-        dispatch({type:'set-loginedUser',payload:res.data.user })
+      if (res.data.code === 0) {
+        dispatch({ type: 'set-isLogined', payload: true })
+        dispatch({ type: 'set-loginedUser', payload: res.data.user })
       }
     })
   }, []);
@@ -26,19 +26,19 @@ const Header = () => {
   const navigate = useNavigate();
   const quit = () => {
     signOut().then(res => {
-      if(res.data.code === 0){
+      if (res.data.code === 0) {
         notification.open({
-          message: "登出成功！",
-          description: "您已成功登出，欢迎再来玩哦",
+          message: "Successful logout！",
+          description: "You have successfully logged out, welcome to play again!",
           icon: <SmileOutlined style={{ color: "#108ee9" }} />,
         });
-        dispatch({type:'set-isLogined',payload:false})
-        dispatch({type:'set-loginedUser',payload:{}})
-      }else{
+        dispatch({ type: 'set-isLogined', payload: false })
+        dispatch({ type: 'set-loginedUser', payload: {} })
+      } else {
         notification.open({
-          message: '登出失败！',
+          message: 'Logout failure！',
           description:
-            '发生未知错误，很抱歉',
+            "An unknown error occurred",
           icon: <FrownTwoTone style={{ color: '#ff4c4c' }} />,
         });
       }
@@ -59,22 +59,22 @@ const Header = () => {
     <div className="header">
       <div className="header-container">
         <div className="left-log">
-          <span>ABC</span>
+          <span onClick={goToHome}>ABC</span>
         </div>
         <div className="right-login">
           {isLogined ? (
             <div className="logined">
               <div className="sign-out" onClick={quit}>
-                登出
+              Log out
               </div>
               <div className="user">{loginedUser.name}</div>
-              <div className="home" onClick={goToHome}>首页</div>
+              <div className="home" onClick={goToHome}>Home</div>
             </div>
           ) : (
             <div className="no-logined">
-               <Link className="/home" to="home">Home</Link> |{" "}
-               <Link to="login">Login</Link>
-               <Link to="register">Register</Link>
+              <div onClick={login}>Signin</div>
+              <div onClick={register}>Register</div>
+              <div className="home" onClick={goToHome}>Home</div>
             </div>
           )}
         </div>

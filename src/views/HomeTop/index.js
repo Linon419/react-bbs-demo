@@ -17,7 +17,7 @@ const HomeTop = () => {
       {
         isLogined? (
           <div className="logined">
-            <div className="welcome">Hi, {loginedUser.name}</div>
+            <div className="welcome"> Hello, {loginedUser.name} </div>
             <div className="message">You already login</div>
             <Button type="primary" onClick={goPost}>New post</Button>
           </div>

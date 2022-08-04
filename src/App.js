@@ -1,19 +1,17 @@
 import React from "react";
-import { useEffect } from "react";
 import {
-  BrowserRouter,
+  Navigate,
   Route,
-  Routes,
+  Routes
 } from "react-router-dom";
-
 import Header from './views/Header'
 import Home from "./views/Home";
 import PostDetail from "./views/PostDetail";
 import CreatePost from "./views/CreatePost";
 import Login from "./views/Login";
 import Register from "./views/Register";
-// import 'antd/dist/antd.css'
-
+import 'normalize.css/normalize.css'
+import 'antd/dist/antd.min.css';
 import bcImg from "./assets/bgc.jpg";
 
 import "./App.scss";
@@ -30,15 +28,21 @@ function App() {
       </div>
       <div className="content">
         <Routes>
-          {/* <Route path="*" element={<App />}/> */}
-            <Route path="/home/:path" element={<Home />} />
-            <Route path="/postdetail/:postId" element={<PostDetail />} />
-            <Route path="/createpost" element={<CreatePost />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+          <Route
+            path="*"
+            element={<Navigate to="/home/total" replace />}
+          />
+          <Route path="/home/:path" element={<Home />} />
+          <Route path="/postdetail/:postId" element={<PostDetail />} />
+          <Route path="/createpost" element={<CreatePost />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
 
         </Routes>
+
+
+
       </div>
     </div>
   );

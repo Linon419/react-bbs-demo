@@ -1,6 +1,9 @@
 import axios from 'axios';
 import moment from 'moment';
-moment.locale('zh-cn')
+import React from 'react';
+
+
+
 
 export function request(config){
   const instance = axios.create({
@@ -21,12 +24,12 @@ export function parseTime(time){
     diffDuration.minutes()
   ]
   if (timeArray[0] > 0) {
-    return `${timeArray[0]}天前`
+    return `${timeArray[0]}days ago`
   } else if (timeArray[1] > 0) {
-    return `${timeArray[1]}小时${timeArray[2]}分钟前`
+    return `${timeArray[1]}hours${timeArray[2]}minutes ago`
   } else if (timeArray[2] > 0) {
-    return `${timeArray[2]}分钟前`
+    return `${timeArray[2]}minutes ago`
   } else {
-    return `刚刚`
+    return `just now`
   }
 }
